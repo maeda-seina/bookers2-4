@@ -71,6 +71,16 @@
       			</div>
     		</li>
 			<% end %>
+			<% if @book_comment.errors.any? %>
+      			<div class="alert alert-warning">
+        			<h2><%= pluralize(@book_comment.errors.count, "error") %> prohibited this comment from being saved:</h2>
+      			<ul>
+        		<% @book_comment.errors.full_messages.each do |message| %>
+         		 <li><%= message %></li>
+      			<% end %>
+      			</ul>
+      			</div>
+      			<% end %>
 			<%= form_for [@book_show, @book_comment] do |f| %>
   				<div class="row">
     				<div class="col-sm-6">

@@ -1,4 +1,6 @@
 
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
+
 <div class="row">
 	<div class="col-xs-3">
 
@@ -32,10 +34,54 @@
 						<% if @user == @user_show %>
 						<%= link_to "Destroy", book_path(@book_show), method: :delete, data: {confirm: "本当に削除してもよろしいですか？"}, class: "btn-sm btn-danger destroy_book_#{@book.id}" %>
 							<% end %>
-						</td>
+					</td>
+					<td><% if @book_show.favorited_by?(current_user) %>
+   							<%= link_to book_favorites_path(@book_show), method: :delete do %>
+   							<i class="fa fa-heart" aria-hidden="true" style="color: red;"></i>
+   							<%= @book_show.favorites.count %>like
+   							<% end %>
+							<% else %>
+  								<%= link_to book_favorites_path(@book_show), method: :post do %>
+  								<i class="fa fa-heart-o" aria-hidden="true"></i>
+  								<%= @book_show.favorites.count %>like
+  								<% end %>
+						<% end %>
+					</td>
 				</tr>
 			</table>
+			<% @book_comments.each do |book_comment| %>
+			<li class="comment">
+      			<div class="comment-body bb">
+        			<div class="comment-avatar">
+         				<div class="avatar">
+            				<%= attachment_image_tag(@book.user, :profile_image, :fill, 100, 100, fallback: "no-image-mini.jpg") %><br>
+          				</div>
+        			</div>
+       				<div class="comment-text">
+          				<div class="comment-author clearfix">
+            				<a href="#" class="link-author"><%= book_comment.user.name %></a>
+          				</div>
+          			<div class="comment-entry"><%= book_comment.comment %></div>
+          			<% if book_comment.user == current_user %>
+            		<div>
+              			<%= link_to "Destroy", book_book_comment_path(book_comment.book, book_comment), method: :delete, class: "btn btn-danger pull-right" %>
+            		</div>
+          <% end %>
+        			</div>
+      			</div>
+    		</li>
+			<% end %>
+			<%= form_for [@book_show, @book_comment] do |f| %>
+  				<div class="row">
+    				<div class="col-sm-6">
+      					<%= f.text_area :comment, rows:'5', class: "form-control",placeholder: "コメントをここに" %>
+    				</div>
+ 				</div>
+  				<%= f.submit "送信する", class: "btn btn-lg btn-base-1 mt-20 pull-right" %>
+			<% end %>
 
 	</div>
 </div>
+
+
 

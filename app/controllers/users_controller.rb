@@ -31,11 +31,16 @@ class UsersController < ApplicationController
     end
   end
 
-  def ensure_correct_user
-    @user = User.find(params[:id])
-    unless @user == current_user
-      redirect_to user_path(current_user)
-    end
+
+
+  def follow
+    user = User.find(params[:id])
+    @users = user.followings
+  end
+
+  def follower
+    user = User.find(params[:id])
+    @users = user.followers
   end
 
   private
